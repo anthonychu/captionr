@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsStorage": "{AzureWebJobsStorage}",
+    "AzureSignalRConnectionString": ""
+  },
+  "Host": {
+    "CORS": "http://localhost:8080",
+    "CORSCredentials": true
+  }
+}
