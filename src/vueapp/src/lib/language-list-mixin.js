@@ -1,9 +1,5 @@
-const supportedLanguages = [
-  'en-US',
-  'fr-FR',
-  'es-ES',
-  'ko-KO'
-]
+import axios from 'axios'
+import constants from './constants'
 
 export default {
   data() {
@@ -14,9 +10,10 @@ export default {
   },
   methods: {
     async getLanguages() {
+      const languages = (await axios.get(`${constants.apiBaseUrl}/api/languages`)).data
       return {
-        from: supportedLanguages,
-        to: supportedLanguages
+        from: languages,
+        to: languages
       }
     }
   },

@@ -27,7 +27,7 @@ export default new Router({
       component: () => import('./views/CaptionHost.vue')
     },
     {
-      path: '/join/:code',
+      path: '/join',
       name: 'join',
       component: () => import('./views/CaptionJoin.vue')
     }

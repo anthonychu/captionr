@@ -2,13 +2,10 @@
   <div class="home">
     <div class="main-option">
       <h2>Host a captioning session</h2>
-      <button @click="login">Login</button>
+      <button @click="login">Host</button>
     </div>
     <div class="main-option">
       <h2>Join a captioning session</h2>
-      <div>
-        <input type="text" v-model="joinCode" @keyup.enter="join" />
-      </div>
       <div>
         <button @click="join">Join</button>
       </div>
@@ -32,14 +29,13 @@ export default {
       this.$router.push('host')
     },
     join() {
-      this.$router.push(`join/${this.joinCode}`)
+      this.$router.push('join')
     }
   }
 }
 </script>
 
 <style>
-
 div.main-option {
   border: 2px solid #ddd;
   border-radius: 10px;

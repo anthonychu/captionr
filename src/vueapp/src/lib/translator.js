@@ -39,23 +39,21 @@ class Translator {
         offset: result.offset,
         languages: {}
       }
-      captions.languages[getMainLanguage(options.fromLanguage)] = result.text
+      captions.languages[getLanguageCode(options.fromLanguage)] = result.text
 
-      //console.log(result.text)
       for (const lang of options.toLanguages) {
-        const mainLang = getMainLanguage(lang)
-        const caption = result.translations.get(mainLang)
-        captions.languages[mainLang] = caption
+        const langCode = getLanguageCode(lang)
+        const caption = result.translations.get(langCode)
+        captions.languages[langCode] = caption
       }
 
       this._callback({
         original: result.text,
         translations: captions
       })
-      // axios.post(`${apiBaseUrl}/api/captions`, captions)
     }
 
-    function getMainLanguage(lang) {
+    function getLanguageCode(lang) {
       return lang.substring(0, 2)
     }
   }
@@ -64,7 +62,7 @@ class Translator {
     this._recognizer.stopContinuousRecognitionAsync(
       stopRecognizer.bind(this),
       function (err) {
-        stopRecognizer()
+        stopRecognizer().bind(this)
         console.error(err)
       }.bind(this)
     )

@@ -7,7 +7,6 @@
         </option>
       </select>
     </div>
-    <!-- <h1>Join a session</h1> -->
     <div id="captions-text" class="caption">
       <div v-for="caption in captions" :key="caption.offset">{{ caption.text }}</div>
     </div>
@@ -15,11 +14,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import constants from '../lib/constants'
 import * as signalR from '@aspnet/signalr'
 import languageListMixin from '../lib/language-list-mixin'
-
-let connection
 
 export default {
   mixins: [ languageListMixin ],
@@ -27,7 +25,6 @@ export default {
     return {
       code: '',
       captions: [],
-      connection: {},
       toLanguage: 'en'
     }
   },
@@ -37,20 +34,17 @@ export default {
     }
   },
   async mounted() {
-    this.code = this.$route.params.code
-    
-    connection = new signalR.HubConnectionBuilder()
+    this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${constants.apiBaseUrl}/api`)
       .build()
 
-    connection.on('newCaption', newCaption.bind(this))
+    this.connection.on('newCaption', onNewCaption.bind(this))
 
-    await connection.start()
+    await this.connection.start()
     console.log('connection started')
 
     const captionsMap = {}
-    function newCaption(caption) {
-      console.log(caption)
+    function onNewCaption(caption) {
       let localCaption = captionsMap[caption.offset]
       if (!localCaption) {
         localCaption = captionsMap[caption.offset] = {
@@ -60,12 +54,17 @@ export default {
         this.captions.push(localCaption)
       }
       localCaption.text = caption.languages[this.toLanguage]
-      window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight)
+
+      Vue.nextTick(function() {
+        window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight)
+      })
     }
   },
-  async destroyed() {
-    await connection.stop()
-    console.log('connection stopped')
+  async beforeDestroy() {
+    if (this.connection) {
+      await this.connection.stop()
+      console.log('connection stopped')
+    }
   }
 }
 </script>
