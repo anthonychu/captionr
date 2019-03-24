@@ -19,6 +19,7 @@ import axios from 'axios'
 import constants from '../lib/constants'
 import * as signalR from '@aspnet/signalr'
 import languageListMixin from '../lib/language-list-mixin'
+import { Promise } from 'q';
 
 export default {
   mixins: [ languageListMixin ],
@@ -37,13 +38,18 @@ export default {
       return this.toLanguages.map(l => l.substring(0, 2)).sort()
     }
   },
+  methods: {
+    async updateLanguageSubscription(languageCode) {        
+      await axios.post(`${constants.apiBaseUrl}/api/selectlanguage`, {
+        languageCode,
+        userId: this.clientId
+      })
+    }
+  },
   watch: {
     toLanguageCode: {
-      async handler() {
-        await axios.post(`${constants.apiBaseUrl}/api/selectlanguage`, {
-          languageCode: this.toLanguageCode,
-          userId: this.clientId
-        })
+      handler() {
+        return this.updateLanguageSubscription(this.toLanguageCode)
       },
       immediate: true
     }
@@ -77,7 +83,10 @@ export default {
   },
   async beforeDestroy() {
     if (this.connection) {
-      await this.connection.stop()
+      Promise.all([
+        this.connection.stop(),
+        this.updateLanguageSubscription(null)
+      ])
       console.log('connection stopped')
     }
   }

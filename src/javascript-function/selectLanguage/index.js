@@ -8,6 +8,5 @@ module.exports = async function (context, req) {
             groupName: lc,
             action: (lc === languageCode) ? 'add' : 'remove'
         }));
-        console.log(JSON.stringify(signalRGroupActions, null, 2));
     context.bindings.signalRGroupActions = signalRGroupActions;
 };
