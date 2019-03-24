@@ -43,6 +43,7 @@ body {
   width: 100%;
   min-height: 100px;
   z-index: 1000;
+  background-color: #fff;
 }
 
 #nav a {
