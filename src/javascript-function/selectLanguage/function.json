@@ -8,8 +8,7 @@
       "name": "req",
       "methods": [
         "post"
-      ],
-      "route": "{userId}/negotiate"
+      ]
     },
     {
       "type": "http",
@@ -17,10 +16,9 @@
       "name": "res"
     },
     {
-      "type": "signalRConnectionInfo",
-      "direction": "in",
-      "userId": "{userId}",
-      "name": "connectionInfo",
+      "type": "signalR",
+      "direction": "out",
+      "name": "signalRGroupActions",
       "hubName": "captions"
     }
   ]

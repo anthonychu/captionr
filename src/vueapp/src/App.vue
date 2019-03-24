@@ -6,10 +6,22 @@
       </div>
     </div>
     <div id="main">
-      <router-view/>
+      <router-view :client-id="clientId" />
     </div>
   </div>
 </template>
+
+<script>
+import uuidv4 from 'uuid/v4'
+
+export default {
+  data() {
+    return {
+      clientId: uuidv4()
+    }
+  }
+}
+</script>
 
 <style>
 body {
@@ -37,10 +49,6 @@ body {
   font-weight: bold;
   color: #2c3e50;
 }
-
-/* #nav a.router-link-exact-active {
-  color: #42b983;
-} */
 
 #nav h1 a {
   text-decoration: none;

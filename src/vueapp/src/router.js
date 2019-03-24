@@ -29,7 +29,8 @@ export default new Router({
     {
       path: '/join',
       name: 'join',
-      component: () => import('./views/CaptionJoin.vue')
+      component: () => import('./views/CaptionJoin.vue'),
+      props: true
     }
   ]
 })

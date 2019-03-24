@@ -1,8 +1,8 @@
 <template>
   <div class="caption-join">
     <div id="language-select">
-      <select v-model="toLanguage">
-        <option v-for="lang in toMainLanguages" :value="lang" :key="lang">
+      <select v-model="toLanguageCode">
+        <option v-for="lang in toLanguageCodes" :value="lang" :key="lang">
           {{ lang }}
         </option>
       </select>
@@ -15,27 +15,42 @@
 
 <script>
 import Vue from 'vue'
+import axios from 'axios'
 import constants from '../lib/constants'
 import * as signalR from '@aspnet/signalr'
 import languageListMixin from '../lib/language-list-mixin'
 
 export default {
   mixins: [ languageListMixin ],
+  props: {
+    clientId: String
+  },
   data() {
     return {
       code: '',
       captions: [],
-      toLanguage: 'en'
+      toLanguageCode: 'en'
     }
   },
   computed: {
-    toMainLanguages() {
+    toLanguageCodes() {
       return this.toLanguages.map(l => l.substring(0, 2)).sort()
+    }
+  },
+  watch: {
+    toLanguageCode: {
+      async handler() {
+        await axios.post(`${constants.apiBaseUrl}/api/selectlanguage`, {
+          languageCode: this.toLanguageCode,
+          userId: this.clientId
+        })
+      },
+      immediate: true
     }
   },
   async mounted() {
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${constants.apiBaseUrl}/api`)
+      .withUrl(`${constants.apiBaseUrl}/api/${this.clientId}`)
       .build()
 
     this.connection.on('newCaption', onNewCaption.bind(this))
@@ -53,7 +68,7 @@ export default {
         }
         this.captions.push(localCaption)
       }
-      localCaption.text = caption.languages[this.toLanguage]
+      localCaption.text = caption.text
 
       Vue.nextTick(function() {
         window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight)

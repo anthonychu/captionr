@@ -1,4 +1,4 @@
-module.exports = {
+const constants = {
   languages: [
     'en-US',
     'fr-FR',
@@ -6,3 +6,7 @@ module.exports = {
     'ko-KO'
   ]
 };
+
+constants.languageCodes = constants.languages.map(l => l.substring(0, 2));
+
+module.exports = constants;
