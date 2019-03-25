@@ -17,13 +17,6 @@
 
 export default {
   name: 'home',
-  components: {
-  },
-  data() {
-    return {
-      joinCode: ''
-    }
-  },
   methods: {
     login() {
       this.$router.push('host')

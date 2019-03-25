@@ -30,19 +30,19 @@ import languageListMixin from '../lib/language-list-mixin'
 export default {
   mixins: [ languageListMixin ],
   data() {
-    const translator = new Translator(function(captions) {
-      this.currentSentence = captions.original
-      axios.post(`${constants.apiBaseUrl}/api/captions`, captions.translations)
-    }.bind(this))
-
     return {
-      translator,
       key: '',
       region: 'westus',
       currentSentence: '',
       started: false,
       fromLanguage: 'en-US'
     }
+  },
+  created() {
+    this.translator = new Translator(function(captions) {
+      this.currentSentence = captions.original
+      axios.post(`${constants.apiBaseUrl}/api/captions`, captions.translations)
+    }.bind(this))
   },
   methods: {
     start() {

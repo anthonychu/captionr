@@ -3,7 +3,9 @@ const constants = {
     'en-US',
     'fr-FR',
     'es-ES',
-    'ko-KO'
+    'ko-KO',
+    'ja-JP',
+    'de-DE'
   ]
 };
 

@@ -2,7 +2,6 @@ module.exports = async function (context, req) {
     const captions = req.body;
 
     const languageCaptions = [];
-
     for (const language in captions.languages) {
         languageCaptions.push({
             language,
