@@ -1,11 +1,11 @@
 # CaptionR
 
-Real-time captioning and translation using:
+Serverless real-time captioning and translation using:
 
-* Microsoft Azure Cognitive Services - Speech-to-Text JavaScript SDK
-* Vue.js
-* Azure Functions
-* Azure SignalR Service
+* Microsoft Azure Cognitive Services - [Speech-to-Text JavaScript SDK](https://www.npmjs.com/package/microsoft-cognitiveservices-speech-sdk)
+* [Vue.js](https://vuejs.org/)
+* [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/?WT.mc_id=captionr-github-antchu)
+* [Azure SignalR Service](https://docs.microsoft.com/en-us/azure/azure-signalr/?WT.mc_id=captionr-github-antchu)
 
 ## Project setup
 
