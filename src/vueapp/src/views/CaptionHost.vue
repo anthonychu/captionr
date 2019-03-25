@@ -2,7 +2,7 @@
   <div class="caption-host">
     <div v-if="!started">
       <h1>Host a session</h1>
-      <div><input type="password" v-model="key" /></div>
+      <div><input type="password" v-model="key" placeholder="Cognitive Services Speech API Key" /></div>
       <div>
         <select v-model="fromLanguage">
           <option v-for="lang in fromLanguages" :value="lang" :key="lang">
