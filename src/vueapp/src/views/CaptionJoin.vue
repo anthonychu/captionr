@@ -82,7 +82,7 @@ export default {
   },
   async beforeDestroy() {
     if (this.connection) {
-      Promise.all([
+      await Promise.all([
         this.connection.stop(),
         this.updateLanguageSubscription(null)
       ])
