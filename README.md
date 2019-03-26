@@ -7,6 +7,8 @@ Serverless real-time captioning and translation using:
 * [Azure Functions](https://docs.microsoft.com/azure/azure-functions/?WT.mc_id=captionr-github-antchu)
 * [Azure SignalR Service](https://docs.microsoft.com/azure/azure-signalr/?WT.mc_id=captionr-github-antchu)
 
+![Project architecture](media/architecture.png)
+
 ## Project setup
 
 The app has 2 main projects:
@@ -54,3 +56,7 @@ With the [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-fun
 func extensions install
 func start
 ```
+
+## More information
+
+Check out the [blog post](https://anthonychu.ca/post/realtime-captioning-translation-cognitive-services-signalr-azure-functions/).
