@@ -17,21 +17,23 @@ Additionally, you'll need a Cognitive Services Speech-to-Text API key ([free tri
 
 And you'll need to create an instance of Azure SignalR Service (free tier available).
 
+### Vue.js app
+
+Install npm packages and start the Vue.js dev server:
+
+```bash
+npm install
+npm run serve
+```
+
 ### Azure Function app
 
 Create a file named local.settings.json (copy from local.settings.sample.json). Fill in the SignalR Service connection string.
 
 With the Azure Functions Core Tools installed, run the function app:
 
-```
+```bash
+func extensions install
 func start
 ```
 
-### Vue.js app
-
-Install npm packages and start the Vue.js dev server:
-
-```
-npm install
-npm run serve
-```
