@@ -24,7 +24,7 @@ az cognitiveservices account create -n $SPEECH_SERVICE_NAME -g $RESOURCE_GROUP_N
 az cognitiveservices account keys list -n $SPEECH_SERVICE_NAME -g $RESOURCE_GROUP_NAME
 ```
 
-`F0` is the free SKU. You can also create it in the [portal]https://portal.azure.com/?WT.mc_id=captionr-github-antchu#create/Microsoft.CognitiveServicesSpeechServices.
+`F0` is the free SKU. You can also create it in the [portal](https://portal.azure.com/?WT.mc_id=captionr-github-antchu#create/Microsoft.CognitiveServicesSpeechServices).
 
 #### Azure SignalR Service - free tier
 
