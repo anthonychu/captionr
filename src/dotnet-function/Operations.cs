@@ -25,8 +25,7 @@ namespace CaptionR
 
         [FunctionName(nameof(Languages))]
         public static IActionResult Languages(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = null)] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = null)] HttpRequest req)
         {
             return new OkObjectResult(Constants.LANGUAGES);
         }
@@ -51,18 +50,17 @@ namespace CaptionR
             return new NoContentResult();
         }
 
-
         [FunctionName(nameof(Captions))]
         public static async Task<IActionResult> Captions(
          [HttpTrigger(AuthorizationLevel.Anonymous, "POST")] HttpRequest req,
          [SignalR(HubName = "captions")] IAsyncCollector<SignalRMessage> signalRMessages)
         {
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic payload = JsonConvert.DeserializeObject(requestBody);
 
             List<Task> languageCaptionsTasks = new List<Task>();
             IDictionary<string, string> languages = payload.languages.ToObject<Dictionary<string, string>>();
+
             foreach (var language in languages)
             {
                 var caption = new
