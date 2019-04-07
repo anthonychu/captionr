@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       key: '',
-      region: 'westus',
+      region: `${constants.region}`,
       currentSentence: '',
       started: false,
       fromLanguage: 'en-US'
@@ -47,7 +47,7 @@ export default {
   methods: {
     start() {
       this.translator.start({
-        key: this.key, 
+        key: this.key,
         region: this.region,
         fromLanguage: this.fromLanguage,
         toLanguages: this.toLanguages
