@@ -1,18 +1,17 @@
 module.exports = async function (context, req) {
     const captions = req.body;
 
-    const languageCaptions = [];
-    for (const language in captions.languages) {
-        languageCaptions.push({
-            language,
-            offset: captions.offset,
-            text: captions.languages[language]
-        });
-    }
+    const languageCaptions = Object.keys(captions.languages).map(captionLanguage => ({
+        language: captionLanguage,
+        offset: captions.offset,
+        text: captions.languages[captionLanguage]
+    }));
 
-    return languageCaptions.map(lc => ({
-        target: "newCaption",
+    const signalRMessages = languageCaptions.map(lc => ({
+        target: 'newCaption',
         groupName: lc.language,
         arguments: [ lc ]
     }));
+
+    return signalRMessages;
 } 
