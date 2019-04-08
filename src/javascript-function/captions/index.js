@@ -14,4 +14,4 @@ module.exports = async function (context, req) {
     }));
 
     return signalRMessages;
-} 
+};
