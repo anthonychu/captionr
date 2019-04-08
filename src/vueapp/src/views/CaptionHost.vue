@@ -27,21 +27,28 @@ import constants from '../lib/constants'
 import Translator from '../lib/translator'
 import languageListMixin from '../lib/language-list-mixin'
 
+const speechApiKeyLocalStorageKey = 'speechApiKey'
+
 export default {
   mixins: [ languageListMixin ],
   data() {
     return {
-      key: '',
-      region: 'westus',
+      key: window.localStorage.getItem(speechApiKeyLocalStorageKey) || '',
+      region: process.env.VUE_APP_SPEECH_REGION || 'westus',
       currentSentence: '',
       started: false,
       fromLanguage: 'en-US'
     }
   },
+  watch: {
+    key(newKey) {
+      window.localStorage.setItem(speechApiKeyLocalStorageKey, newKey)
+    }
+  },
   created() {
     this.translator = new Translator(function(captions) {
       this.currentSentence = captions.original
-      axios.post(`${constants.apiBaseUrl}/api/captions`, captions.translations)
+      axios.post(`${constants.apiBaseUrl}/api/captions`, captions.translations, { withCredentials: true })
     }.bind(this))
   },
   methods: {
