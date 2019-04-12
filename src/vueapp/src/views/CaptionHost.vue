@@ -48,7 +48,9 @@ export default {
   created() {
     this.translator = new Translator(function(captions) {
       this.currentSentence = captions.original
-      axios.post(`${constants.apiBaseUrl}/api/captions`, captions.translations, { withCredentials: true })
+      axios.post(`${constants.apiBaseUrl}/api/captions`,
+        captions.translations,
+        { withCredentials: true })
     }.bind(this))
   },
   methods: {
