@@ -1,0 +1,14 @@
+{
+  "azureFunctions.projectRuntime": "~2",
+  "azureFunctions.projectLanguage": "Java",
+  "azureFunctions.deploySubpath": "target/azure-functions/captionr-20190412230358375/",
+  "azureFunctions.preDeployTask": "package",
+  "debug.internalConsoleOptions": "neverOpen",
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  },
+  "java.configuration.updateBuildConfiguration": "interactive"
+}
