@@ -7,6 +7,8 @@ Serverless real-time captioning and translation using:
 * [Azure Functions](https://docs.microsoft.com/azure/azure-functions/?WT.mc_id=captionr-github-antchu)
 * [Azure SignalR Service](https://docs.microsoft.com/azure/azure-signalr/?WT.mc_id=captionr-github-antchu)
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/YLtXoGk8A1c" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ![Project architecture](media/architecture.png)
 
 ## Project setup
