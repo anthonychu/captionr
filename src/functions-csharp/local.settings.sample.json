@@ -1,0 +1,11 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "AzureSignalRConnectionString": ""
+  },
+  "Host": {
+    "CORS": "http://localhost:8080",
+    "CORSCredentials": true
+  }
+}
