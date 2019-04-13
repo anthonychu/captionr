@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       key: window.localStorage.getItem(speechApiKeyLocalStorageKey) || '',
-      region: process.env.VUE_APP_SPEECH_REGION || 'westus',
+      region: `${constants.region}`,
       currentSentence: '',
       started: false,
       fromLanguage: 'en-US'
@@ -56,7 +56,7 @@ export default {
   methods: {
     start() {
       this.translator.start({
-        key: this.key, 
+        key: this.key,
         region: this.region,
         fromLanguage: this.fromLanguage,
         toLanguages: this.toLanguages
