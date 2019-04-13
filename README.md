@@ -13,7 +13,7 @@ Serverless real-time captioning and translation using:
 
 The app has 2 main projects:
 * Vue.js frontend in `src/vueapp`
-* Azure Functions backend in `src/javascript-function`
+* Azure Functions backend in `src/functions-javascript` (C# and Java also available)
 
 ### Azure resources
 
@@ -51,6 +51,8 @@ npm run serve
 Create a file named local.settings.json (copy from local.settings.sample.json). Fill in the SignalR Service connection string.
 
 With the [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local?WT.mc_id=captionr-github-antchu#install-the-azure-functions-core-tools) installed, run the function app:
+
+(JavaScript)
 
 ```bash
 func extensions install
