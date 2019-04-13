@@ -1,19 +1,18 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using CaptionR.Common;
-using System.IO;
 using Newtonsoft.Json;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace CaptionR
 {
-    public static partial class Operations
+    public static class Operations
     {
         [FunctionName(nameof(Negotiate))]
         public static IActionResult Negotiate(
@@ -25,7 +24,7 @@ namespace CaptionR
 
         [FunctionName(nameof(Languages))]
         public static IActionResult Languages(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = null)] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "GET")] HttpRequest req)
         {
             return new OkObjectResult(Constants.LANGUAGES);
         }
