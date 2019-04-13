@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +7,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.AspNetCore.Mvc;
 using CaptionR.Common;
-using Newtonsoft.Json;
 
 namespace CaptionR
 {
@@ -30,35 +28,31 @@ namespace CaptionR
         }
 
         [FunctionName(nameof(SelectLanguage))]
-        public static async Task<IActionResult> SelectLanguage(
-           [HttpTrigger(AuthorizationLevel.Anonymous, "POST")] HttpRequest req,
-           [SignalR(HubName = "captions")] IAsyncCollector<SignalRGroupAction> signalRGroupActions)
+        public static async Task SelectLanguage(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "POST")] dynamic payload,
+            [SignalR(HubName = "captions")] IAsyncCollector<SignalRGroupAction> signalRGroupActions)
         {
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic payload = JsonConvert.DeserializeObject(requestBody);
-            string languageCode = payload.languageCode;
+            var languageCode = payload.languageCode.ToString();
 
-            IEnumerable<Task> groupActionsTasks = Constants.LANGUAGE_CODES.Select(lc => signalRGroupActions.AddAsync(new SignalRGroupAction
-            {
-                UserId = payload.userId,
-                GroupName = lc,
-                Action = lc == languageCode ? GroupAction.Add : GroupAction.Remove
-            }));
+            var groupActionsTasks = 
+                Constants.LANGUAGE_CODES.Select(lc => 
+                    signalRGroupActions.AddAsync(new SignalRGroupAction
+                    {
+                        UserId = payload.userId,
+                        GroupName = lc,
+                        Action = lc == languageCode ? GroupAction.Add : GroupAction.Remove
+                    }));
 
             await Task.WhenAll(groupActionsTasks);
-            return new NoContentResult();
         }
 
         [FunctionName(nameof(Captions))]
-        public static async Task<IActionResult> Captions(
-         [HttpTrigger(AuthorizationLevel.Anonymous, "POST")] HttpRequest req,
-         [SignalR(HubName = "captions")] IAsyncCollector<SignalRMessage> signalRMessages)
+        public static async Task Captions(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "POST")] dynamic payload,
+            [SignalR(HubName = "captions")] IAsyncCollector<SignalRMessage> signalRMessages)
         {
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic payload = JsonConvert.DeserializeObject(requestBody);
-
-            List<Task> languageCaptionsTasks = new List<Task>();
-            IDictionary<string, string> languages = payload.languages.ToObject<Dictionary<string, string>>();
+            var languageCaptionsTasks = new List<Task>();
+            var languages = payload.languages.ToObject<Dictionary<string, string>>();
 
             foreach (var language in languages)
             {
@@ -76,8 +70,8 @@ namespace CaptionR
                     Arguments = new[] { caption }
                 }));
             }
+
             await Task.WhenAll(languageCaptionsTasks);
-            return new NoContentResult();
         }
     }
 }
