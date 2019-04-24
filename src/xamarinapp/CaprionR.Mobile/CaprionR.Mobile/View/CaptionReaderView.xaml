@@ -47,15 +47,35 @@
                 VerticalOptions="Center" />
 
             <ScrollView
+                x:Name="MainScrollView"
                 Grid.Row="1"
                 Grid.ColumnSpan="2"
                 Padding="5"
                 VerticalOptions="FillAndExpand">
-                <Label
-                    d:Text="This is some sample text being read in. And now it should wrap."
-                    FontSize="20"
-                    LineBreakMode="WordWrap"
-                    Text="{Binding Text}" />
+                <StackLayout BindableLayout.ItemsSource="{Binding Captions}">
+                    <d:BindableLayout.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>This is some sample text being read in. And now it should wrap.</x:String>
+                            <x:String>Item Two</x:String>
+                            <x:String>Item Three</x:String>
+                        </x:Array>
+                    </d:BindableLayout.ItemsSource>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <Label
+                                    d:Text="{Binding .}"
+                                    FontSize="20"
+                                    LineBreakMode="WordWrap"
+                                    Text="{Binding Text}" />
+                                <BoxView
+                                    Margin="10"
+                                    BackgroundColor="LightGray"
+                                    HeightRequest="1" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
             </ScrollView>
             <Button
                 Grid.Row="2"

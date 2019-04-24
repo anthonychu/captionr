@@ -24,6 +24,7 @@ namespace CaprionR.Mobile.ViewModel
         HubConnection hubConnection;
         List<string> fullLanguages;
         public ObservableRangeCollection<string> Languages { get; }
+        public ObservableRangeCollection<FullCaption> Captions { get; }
         public ICommand GetLanguagesCommand { get; }
         public ICommand ChangeLanguageCommand { get; }
 
@@ -40,48 +41,39 @@ namespace CaprionR.Mobile.ViewModel
             userId = Guid.NewGuid().ToString();
             fullLanguages = new List<string>();
             Languages = new ObservableRangeCollection<string>();
+            Captions = new ObservableRangeCollection<FullCaption>();
 
             GetLanguagesCommand = new Command(async () => await ExecuteGetLanguagesCommand());
             ChangeLanguageCommand = new Command(async () => await ExecuteChangeLanguageCommand());
+
             var url = $"{Constants.ApiBaseUrl}/api/{userId}";
             hubConnection = new HubConnectionBuilder()
                 .WithUrl($"{Constants.ApiBaseUrl}/api/{userId}")
                 .Build();
-            /*hubConnection.Closed += async (error) =>
-            {
-                   
-                IsConnected = false;
-                await Task.Delay(random.Next(0, 5) * 1000);
-                try
-                {
-                    await ConnectAsync();
-                }
-                catch (Exception ex)
-                {
-                    // Exception!
-                    Debug.WriteLine(ex);
-                }
-            };*/
-
 
             hubConnection.On<JObject>("newCaption", (caption) =>
             {
                 var fullCaption = caption.ToObject<Caption>();
 
+                var text = fullCaption.Text;
+                var offset = fullCaption.Offset;
+
+                if (string.IsNullOrWhiteSpace(text))
+                    return;
 
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    Text = fullCaption.Text;
+                    var current = Captions.FirstOrDefault(c => c.Offset == offset);
+                    if (current == null)
+                    {
+                        Captions.Insert(0, new FullCaption { Offset = offset, Text = text });
+                        OnPropertyChanged(nameof(Captions));
+                    }
+                    else
+                        current.Text = text;
                 });
             });
 
-        }
-
-        string text = string.Empty;
-        public string Text
-        {
-            get => text;
-            set => SetProperty(ref text, value);
         }
 
         string selectedLanguage = string.Empty;
@@ -113,7 +105,7 @@ namespace CaprionR.Mobile.ViewModel
             }
             catch (Exception)
             {
-                Text = "Unable to get languages.";
+                Title = "Unable to get languages.";
             }
             finally
             {
@@ -146,7 +138,7 @@ namespace CaprionR.Mobile.ViewModel
             }
             catch (Exception)
             {
-                Text = "Unable to select language.";
+                Title = "Unable to select language.";
             }
             finally
             {
