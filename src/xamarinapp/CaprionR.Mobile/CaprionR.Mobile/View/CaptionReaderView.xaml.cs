@@ -23,13 +23,25 @@ namespace CaprionR.Mobile.View
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await ViewModel.ConnectAsync();
+            try
+            {
+                await ViewModel.ConnectAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         protected override async void OnDisappearing()
         {
             base.OnDisappearing();
-            await ViewModel.DisconnectAsync();
+            try
+            {
+                await ViewModel.DisconnectAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

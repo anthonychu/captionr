@@ -6,6 +6,7 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodel="clr-namespace:CaprionR.Mobile.ViewModel"
+    Title="{Binding Title}"
     mc:Ignorable="d">
     <ContentPage.BindingContext>
         <viewmodel:CaptionReaderViewModel />
@@ -59,7 +60,7 @@
             <Button
                 Grid.Row="2"
                 Grid.ColumnSpan="2"
-                Command="{Binding JoinChannelCommand}"
+                Command="{Binding ChangeLanguageCommand}"
                 IsEnabled="{Binding IsNotBusy}"
                 Text="Force Update Language" />
 

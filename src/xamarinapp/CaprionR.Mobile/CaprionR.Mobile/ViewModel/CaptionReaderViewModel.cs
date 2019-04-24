@@ -3,11 +3,13 @@ using CaprionR.Mobile.Model;
 using Microsoft.AspNetCore.SignalR.Client;
 using MvvmHelpers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -18,7 +20,7 @@ namespace CaprionR.Mobile.ViewModel
 {
     public class CaptionReaderViewModel : BaseViewModel
     {
-        string clientId;
+        string userId;
         HubConnection hubConnection;
         List<string> fullLanguages;
         public ObservableRangeCollection<string> Languages { get; }
@@ -35,14 +37,17 @@ namespace CaprionR.Mobile.ViewModel
         Random random = new Random();
         public CaptionReaderViewModel()
         {
-            clientId = Guid.NewGuid().ToString();
+            userId = Guid.NewGuid().ToString();
             fullLanguages = new List<string>();
             Languages = new ObservableRangeCollection<string>();
 
             GetLanguagesCommand = new Command(async () => await ExecuteGetLanguagesCommand());
             ChangeLanguageCommand = new Command(async () => await ExecuteChangeLanguageCommand());
-            hubConnection = new HubConnectionBuilder().WithUrl($"{Constants.ApiBaseUrl}/api/{clientId}").Build();
-            hubConnection.Closed += async (error) =>
+            var url = $"{Constants.ApiBaseUrl}/api/{userId}";
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl($"{Constants.ApiBaseUrl}/api/{userId}")
+                .Build();
+            /*hubConnection.Closed += async (error) =>
             {
                    
                 IsConnected = false;
@@ -56,16 +61,20 @@ namespace CaprionR.Mobile.ViewModel
                     // Exception!
                     Debug.WriteLine(ex);
                 }
-            };
+            };*/
 
 
-            hubConnection.On<Caption>("newCaption", (caption) =>
+            hubConnection.On<JObject>("newCaption", (caption) =>
             {
+                var fullCaption = caption.ToObject<Caption>();
+
+
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    Text = caption.Text;
+                    Text = fullCaption.Text;
                 });
             });
+
         }
 
         string text = string.Empty;
@@ -92,15 +101,15 @@ namespace CaprionR.Mobile.ViewModel
                 return;
             try
             {
+                Title = "Getting Languages...";
                 IsBusy = true;
                 var json = await Client.GetStringAsync("api/Languages");
                 fullLanguages.Clear();
                 fullLanguages.AddRange(JsonConvert.DeserializeObject<IEnumerable<string>>(json));
                 Languages.ReplaceRange(fullLanguages.Select(l => l.Substring(0, 2)));
-                if(string.IsNullOrWhiteSpace(SelectedLanguage))
-                {
-                    SelectedLanguage = Languages?.FirstOrDefault() ?? string.Empty;
-                }
+                
+
+                Title = "Receiving...";
             }
             catch (Exception)
             {
@@ -110,16 +119,30 @@ namespace CaprionR.Mobile.ViewModel
             {
                 IsBusy = false;
             }
+
+            if (string.IsNullOrWhiteSpace(SelectedLanguage))
+            {
+                SelectedLanguage = Languages?.FirstOrDefault() ?? string.Empty;
+            }
         }
 
         async Task ExecuteChangeLanguageCommand()
         {
-            if (IsBusy)
+            if (IsBusy || !IsConnected)
                 return;
             try
             {
+                Title = "Setting Language...";
                 IsBusy = true;
-                await Client.PutAsync("api/SelectLanguage", new StringContent($""));
+
+                var selected = new SelectLanguage
+                {
+                    LanguageCode = SelectedLanguage,
+                    UserId = this.userId
+                };
+                var byteContent = CreatePostContent(selected);
+                await Client.PostAsync("api/SelectLanguage", byteContent);
+                Title = "Receiving...";
             }
             catch (Exception)
             {
@@ -131,22 +154,34 @@ namespace CaprionR.Mobile.ViewModel
             }
         }
 
+        private static ByteArrayContent CreatePostContent(object item)
+        {
+            var json = JsonConvert.SerializeObject(item);
+            var buffer = Encoding.UTF8.GetBytes(json);
+            var byteContent = new ByteArrayContent(buffer);
+
+            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            return byteContent;
+        }
+
         public async Task ConnectAsync()
         {
             if (IsConnected)
                 return;
 
+            Title = "Connecting...";
             await hubConnection.StartAsync();
             IsConnected = true;
+            Title = "Connected...";
         }
 
         public async Task DisconnectAsync()
         {
             if (!IsConnected)
                 return;
-
+            Title = "Disconnected...";
             await hubConnection.StopAsync();
-
+            Title = "Disconnected...";
             IsConnected = false;
         }
     }
