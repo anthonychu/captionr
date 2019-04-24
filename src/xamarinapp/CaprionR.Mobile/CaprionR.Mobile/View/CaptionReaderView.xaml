@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CaprionR.Mobile.View.CaptionReaderView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:CaprionR.Mobile.ViewModel"
+    mc:Ignorable="d">
+    <ContentPage.BindingContext>
+        <viewmodel:CaptionReaderViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Picker
+                Margin="5,0"
+                d:SelectedItem="Item One"
+                IsEnabled="{Binding IsNotBusy}"
+                ItemsSource="{Binding Languages}"
+                SelectedItem="{Binding SelectedLanguage}"
+                VerticalOptions="Center">
+                <d:Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Item One</x:String>
+                        <x:String>Item Two</x:String>
+                        <x:String>Item Three</x:String>
+                    </x:Array>
+                </d:Picker.ItemsSource>
+            </Picker>
+
+            <Button
+                Grid.Column="1"
+                Command="{Binding GetLanguagesCommand}"
+                IsEnabled="{Binding IsNotBusy}"
+                Text="Get Langauges"
+                VerticalOptions="Center" />
+
+            <ScrollView
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Padding="5"
+                VerticalOptions="FillAndExpand">
+                <Label
+                    d:Text="This is some sample text being read in. And now it should wrap."
+                    FontSize="20"
+                    LineBreakMode="WordWrap"
+                    Text="{Binding Text}" />
+            </ScrollView>
+            <Button
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Command="{Binding JoinChannelCommand}"
+                IsEnabled="{Binding IsNotBusy}"
+                Text="Force Update Language" />
+
+            <ActivityIndicator
+                Grid.RowSpan="3"
+                Grid.ColumnSpan="2"
+                d:IsRunning="true"
+                d:IsVisible="true"
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                VerticalOptions="Center" />
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>
