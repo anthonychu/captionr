@@ -14,12 +14,17 @@
 </template>
 
 <script>
+import constants from '../lib/constants'
 
 export default {
   name: 'home',
   methods: {
     login() {
-      this.$router.push('host')
+      if (constants.authProvider) {
+        window.location.href = `${constants.apiBaseUrl}/.auth/login/${constants.authProvider}?post_login_redirect_url=${encodeURIComponent(window.location.origin + '/host')}`
+      } else {
+        this.$router.push('host')
+      }
     },
     join() {
       this.$router.push('join')
