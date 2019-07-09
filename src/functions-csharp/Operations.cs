@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,9 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.AspNetCore.Mvc;
 using CaptionR.Common;
+using System.IO;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Primitives;
 
 namespace CaptionR
 {
@@ -48,9 +52,17 @@ namespace CaptionR
 
         [FunctionName(nameof(Captions))]
         public static async Task Captions(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "POST")] dynamic payload,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "POST")] HttpRequest req,
             [SignalR(HubName = "captions")] IAsyncCollector<SignalRMessage> signalRMessages)
         {
+            if (!IsAuthorized(req))
+            {
+                throw new Exception("Unauthorized"); // TODO: should return an HTTP response
+            }
+
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            dynamic payload = JsonConvert.DeserializeObject(requestBody);
+
             var languageCaptionsTasks = new List<Task>();
             var languages = payload.languages.ToObject<Dictionary<string, string>>();
 
@@ -72,6 +84,18 @@ namespace CaptionR
             }
 
             await Task.WhenAll(languageCaptionsTasks);
+        }
+
+        private static bool IsAuthorized(HttpRequest req)
+        {
+            var authorizedUser = Environment.GetEnvironmentVariable("AUTHORIZED_USER");
+            if (string.IsNullOrEmpty(authorizedUser))
+            {
+                return true;
+            }
+
+            req.Headers.TryGetValue("x-ms-client-principal-name", out StringValues requestUser);
+            return authorizedUser.ToLowerInvariant() == requestUser.First().ToLowerInvariant();
         }
     }
 }
