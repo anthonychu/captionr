@@ -1,0 +1,9 @@
+{
+  "routes": [{
+      "path_prefix": "/",
+      "policies": { "unauthenticated_action": "AllowAnonymous" }
+    },{
+      "path_prefix": "/api/captions",
+      "policies": { "unauthenticated_action": "RejectWith401" }
+    }]
+}
