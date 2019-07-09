@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav">
       <div>
-        <h1><router-link to="/">CaptionR</router-link></h1>
+        <h1><router-link to="/">{{ title }}</router-link></h1>
       </div>
     </div>
     <div id="main">
@@ -13,11 +13,13 @@
 
 <script>
 import uuidv4 from 'uuid/v4'
+import constants from './lib/constants'
 
 export default {
   data() {
     return {
-      clientId: uuidv4()
+      clientId: uuidv4(),
+      title: constants.title
     }
   }
 }
